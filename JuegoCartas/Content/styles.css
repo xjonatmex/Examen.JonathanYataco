@@ -1,0 +1,105 @@
+﻿body {
+    text-align: center;
+    font-family: Arial, sans-serif;
+    background: url('../Images/fondo.jpg') no-repeat center center fixed;
+    background-size: cover;
+    color: white;
+}
+
+.contenedor {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 90%;
+    margin: auto;
+}
+
+.juego {
+    flex: 2;
+}
+
+.indicaciones {
+    flex: 1;
+    background: white;
+    color: black;
+    border: 2px solid black;
+    padding: 15px;
+    text-align: center;
+    max-width: 300px;
+    border-radius: 10px;
+}
+
+    .indicaciones img {
+        width: 100px;
+        cursor: pointer;
+        margin-top: 10px;
+    }    
+
+.tablero {
+    display: grid;
+    grid-template-columns: repeat(4, 100px);
+    gap: 10px;
+    justify-content: center;
+}
+
+.carta {
+    width: 100px;
+    height: 100px;
+    background: url('../Images/cartabase.PNG') no-repeat center center;
+    background-size: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    cursor: pointer;
+    color: transparent; 
+    border: 1px solid white;
+    user-select: none; 
+}
+
+    .carta:hover {
+        transform: scale(1.1); 
+    }
+
+.descubierta {
+    background: white !important; 
+    color: black !important; 
+    border: 3px solid black !important;
+    font-size: 40px; 
+    font-family: Arial, sans-serif;
+    font-weight: bold; 
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.vidas {
+    margin: 20px;
+    font-size: 24px;
+}
+
+.corazon {
+    font-size: 24px;
+    color: red;
+    margin: 5px;
+}
+
+.gris {
+    color: gray;
+}
+
+.btn-reiniciar {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    background-color: #ff5733;
+    color: white;
+    border-radius: 5px;
+}
+
+    .btn-reiniciar:hover {
+        background-color: #c70039;
+    }
