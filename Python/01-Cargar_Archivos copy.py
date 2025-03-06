@@ -4,6 +4,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 import time
+import pyautogui
 from selenium.webdriver.support import expected_conditions as EC
 
 # 📌 Ruta del archivo Excel
@@ -66,41 +67,6 @@ mapeo_portafolio_xpath = {
 
 # 📌 Iterar sobre cada fila del archivo
 for index, fila in df.iterrows():
-
-
-    try:
-        # 📌 Hacer clic en el primer botón "Borrar formulario"
-        boton_borrar = WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.XPATH, "//span[text()='Borrar formulario']/ancestor::div[@role='button']"))
-        )
-        boton_borrar.click()
-        print("✅ Se hizo clic en 'Borrar formulario' (primer botón)")
-
-        # 📌 Esperar a que aparezca el pop-up
-        WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, "//div[@role='alertdialog']"))
-        )
-        print("✅ Se detectó el pop-up de confirmación")
-
-        # 📌 Seleccionar el botón correcto de "Borrar formulario" en el pop-up
-        boton_confirmar = WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.XPATH, "//div[@role='alertdialog']//span[text()='Borrar formulario']/ancestor::div[@role='button']"))
-        )
-
-        # 📌 Intentar hacer clic con Selenium
-        try:
-            boton_confirmar.click()
-            print("✅ Se hizo clic en 'Borrar formulario' en el pop-up")
-        except:
-            print("⚠️ No se pudo hacer clic directamente, intentando con JavaScript...")
-            driver.execute_script("arguments[0].click();", boton_confirmar)
-
-        time.sleep(2)
-
-    except Exception as e:
-        print(f"⚠️ Error al intentar borrar el formulario: {e}")
-
-
 
 
     # 📌 Rellenar el campo de "CORREO"
@@ -241,12 +207,10 @@ for index, fila in df.iterrows():
         # Agregar más opciones según el formulario...
     }
 
-    # 📌 Iterar sobre cada fila del Excel
-    for index, row in df.iterrows():
-        tipo_gasto = str(row.iloc[18]).strip()  # Obtener el valor de la columna 18 (índice 18)
+    tipo_gasto = str(fila[18]).strip()  # Obtener el valor de la columna 18 (índice 18)
 
-        # 📌 Verificar que el tipo de gasto esté en el mapeo
-        if tipo_gasto in mapeo_tipo_gasto_xpath:
+    # 📌 Verificar que el tipo de gasto esté en el mapeo
+    if tipo_gasto in mapeo_tipo_gasto_xpath:
             try:
                 # 📌 Esperar que el radio button sea interactuable
                 campo_tipo_gasto = WebDriverWait(driver, 10).until(
@@ -264,7 +228,7 @@ for index, fila in df.iterrows():
                 time.sleep(1)  # Pequeña pausa antes de continuar
             except Exception as e:
                 print(f"⚠️ No se pudo seleccionar el tipo de gasto '{tipo_gasto}': {e}")
-        else:
+    else:
             print(f"❌ Tipo de gasto '{tipo_gasto}' no encontrado en el mapeo.")
 
 
@@ -427,5 +391,52 @@ for index, fila in df.iterrows():
         print(f"⚠️ No se pudo hacer clic en 'Siguiente': {e}")
 
 
+
+   # 📌 Obtener el nombre del archivo PDF desde la columna 23
+    nombre_pdf = df.iloc[0, 23]  # 22 porque en Python los índices empiezan en 0
+    ruta_pdf = f"C:\\PDFBBVA\\{nombre_pdf}.pdf"  # Ruta completa del PDF
+
+   # 📌 Buscar y hacer clic en "Agregar archivo"
+    boton_agregar = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.XPATH, "//span[contains(text(),'Agregar archivo')]"))
+    )
+    boton_agregar.click()
+    time.sleep(5)
+
+    
+    # 📌 Esperar a que aparezca el iframe y cambiar a él
+    iframe = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, "//iframe[contains(@src, 'docs.google.com/picker')]"))
+    )
+    driver.switch_to.frame(iframe)
+
+    # 📌 Esperar y hacer clic en el botón "Explorar" (puede ser un botón tipo input[type=file])
+    input_archivo = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.XPATH, "//input[@type='file']"))
+    )
+
+    # 📌 Enviar la ruta del archivo PDF
+    input_archivo.send_keys(ruta_pdf)
+
+    # 📌 Volver al contexto principal
+    driver.switch_to.default_content()
+    time.sleep(5)
+    # 📌 Esperar y hacer clic en el botón "Enviar"
+    boton_enviar = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.XPATH, "//span[contains(text(),'Enviar')]"))
+    )
+    boton_enviar.click()
+
+    # 📌 Esperar unos segundos para que el formulario se envíe
+    time.sleep(5)
+
+    # 📌 Esperar y cerrar el navegador
+    time.sleep(5)
+
+
+    # 📌 Opcional: Esperar un momento antes de cerrar el navegador
+    time.sleep(5)
+
+# driver.quit()  # Cierra el navegador
 # Cerrar el navegador al finalizar
-driver.quit()
+# driver.quit()
