@@ -6,6 +6,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 import time
 import pyautogui
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.action_chains import ActionChains
 
 # 📌 Ruta del archivo Excel
 ruta_excel = r"C:\GitHub\Examen.JonathanYataco\Python\Datos.xlsx"
@@ -81,10 +83,35 @@ for index, fila in df.iterrows():
     if pd.notna(fila["FECHA DE GASTO"]):  # Evitar valores nulos
         fecha_formateada = fila[1].strftime("%d-%m-%Y")
         campo_fecha.send_keys(fecha_formateada)
+        campo_fecha.send_keys(Keys.ENTER)
+        # 📌 Simular presionar TAB en el teclado
+        actions = ActionChains(driver)
+        time.sleep(1)
+        actions.send_keys(Keys.TAB)
+        time.sleep(1)
+        actions.send_keys(Keys.TAB)  # Pasa al siguiente control
+        actions.send_keys(Keys.ARROW_DOWN)  # Baja una opción en el combo
+        time.sleep(2)
+        actions.send_keys(Keys.ARROW_DOWN)  # Baja segunda opción
+        time.sleep(2)
+        actions.send_keys(Keys.ARROW_DOWN)  # Baja tercera opción
+        time.sleep(2)
+        actions.send_keys(Keys.ARROW_DOWN)  # Baja una opción en el combo
+        time.sleep(2)
+        actions.send_keys(Keys.ENTER)  # Selecciona la opción
+        actions.perform()  # Ejecutar la secuencia de teclas
     else:
         print("⚠️ Advertencia: Fecha inválida en el Excel, saltando fila.")
 
-    time.sleep(1)
+    time.sleep(2)
+
+   
+
+
+
+
+
+
 
     # 📌 Seleccionar el radio button de "ENTIDAD"
     entidad = fila[2].strip()  # Asegurarse de que no haya espacios extra
@@ -105,6 +132,7 @@ for index, fila in df.iterrows():
             time.sleep(1)
         except Exception as e:
             print(f"⚠️ No se pudo seleccionar la opción '{entidad}' en la fila {index}. Error: {e}")
+
 
     # 📌 Seleccionar el radio button de "TIPO"
     tipo = fila[3].strip()  # Asegurarse de que no haya espacios extra
