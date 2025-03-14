@@ -17,7 +17,7 @@ url_formulario = "https://docs.google.com/forms/d/e/1FAIpQLSf5ZsXYdLj0eLa_Nb5L4k
 
 # 📌 Configuración de Chrome
 opciones = webdriver.ChromeOptions()
-opciones.add_argument(r"--user-data-dir=C:\Users\jonat\AppData\Local\Google\Chrome\User Data")
+opciones.add_argument(r"--user-data-dir=C:\Users\jonathan\AppData\Local\Google\Chrome\User Data")
 opciones.add_argument(r"--profile-directory=Default")
 opciones.add_experimental_option("excludeSwitches", ["enable-automation"])
 opciones.add_experimental_option("useAutomationExtension", False)
@@ -453,7 +453,7 @@ for index, fila in df.iterrows():
     boton_enviar = WebDriverWait(driver, 10).until(
         EC.element_to_be_clickable((By.XPATH, "//span[contains(text(),'Enviar')]"))
     )
-    boton_enviar.click()
+    #boton_enviar.click()
 
     # 📌 Esperar unos segundos para que el formulario se envíe
     time.sleep(5)
